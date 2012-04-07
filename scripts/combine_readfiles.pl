@@ -14,9 +14,11 @@ EOF
 ;
 my $add_fwdrev_to_readid = 0; # add /1 and /2 to read ids
 my $reads_dir = 'reads';
+my $jobdir = 'jobs';
 GetOptions(
 	   'hdr:s'       => \$job_header,
 	   'd|dir:s'     => \$reads_dir,
+	   'J|jobdir:s'  => \$jobdir,
 	   's|strains:s' => \$strain_file,
 	   'column:i'    => \$strain_column,
 	   'add|addfwd!' => \$add_fwdrev_to_readid,
@@ -29,7 +31,7 @@ if ( ! defined $reads_dir || ! -d $reads_dir ) {
 if ( ! -f $strain_file ) {
   die("must have a strain file to insure we are picking up proper strains\n");
 }
-
+mkdir($jobdir) unless -d $jobdir;
 open(my $fh => $strain_file) || die "cannot open strainfile '$strain_file': $!";
 my %strains;
 while (<$fh>) {
@@ -69,7 +71,7 @@ for my $file (readdir(DIR) ) {
 
 for my $strain ( sort keys %strains) {
   my @ofiles;
-  open(my $jobfh => ">$strain.combine.sh") || die $!;
+  open(my $jobfh => ">$jobdir/$strain.combine.sh") || die $!;
   print $jobfh $job_header;
   for my $lane ( keys %{$strains{$strain}} ) {
     my $ofile = sprintf("%s.fq",$lane);
