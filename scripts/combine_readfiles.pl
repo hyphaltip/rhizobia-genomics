@@ -4,6 +4,7 @@ use Getopt::Long;
 use Cwd;
 use File::Spec;
 my $cwd = cwd;
+my $tmpdir = '/dev/shm';
 my $strain_file = 'strain_lookup.dat';
 # FORMAT OF THIS FILE EXPECTS LAST COLUMN TO BE THE STRAIN NAME
 my $strain_column = -1;
@@ -25,6 +26,7 @@ GetOptions(
 	   's|strains:s' => \$strain_file,
 	   'column:i'    => \$strain_column,
 	   'add|addfwd!' => \$add_fwdrev_to_readid,
+	   'tmp|tmpdir:s'=> \$tmpdir,
 );
 if ( ! defined $reads_dir || ! -d $reads_dir ) {
   warn("no read directory provided, using current directory\n");
@@ -78,7 +80,7 @@ for my $strain ( sort keys %strains) {
   open(my $jobfh => ">$jobdir/$strain.combine.sh") || die $!;
   print $jobfh $job_header;
   for my $lane ( keys %{$strains{$strain}} ) {
-    my $ofile = sprintf("%s.fq",$lane);
+    my $ofile = sprintf("%s/%s_%s.fq",$tmpdir,$lane,$strain);
     if ( exists $strains{$strain}->{$lane}->{1} &&
 	 exists $strains{$strain}->{$lane}->{2} ) {
       printf $jobfh ( "shuffleSequences_fastq.pl %s %s %s\n",
