@@ -34,7 +34,7 @@ open(my $fh => $strain_file) || die "cannot open strainfile '$strain_file': $!";
 my %strains;
 while (<$fh>) {
   my @row = split;
-  $strains{$row[$strain_column]}++; # grab strain name from specific column
+  $strains{$row[$strain_column]} = {}; # grab strain name from specific column
 }
 
 opendir(DIR, $reads_dir) || die "cannot open $reads_dir. $!\n";
