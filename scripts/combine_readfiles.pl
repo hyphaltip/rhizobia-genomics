@@ -1,12 +1,15 @@
 #!/usr/bin/perl -w
 use strict;
 use Getopt::Long;
-
+use Cwd;
+use File::Spec;
+my $cwd = cwd;
 my $strain_file = 'strain_lookup.dat';
 # FORMAT OF THIS FILE EXPECTS LAST COLUMN TO BE THE STRAIN NAME
 my $strain_column = -1;
 my $job_header = <<EOF
 #PBS -N combineReads -l nodes=1:ppn=1
+#PBS -d $cwd
 module load stajichlab
 module load velvet
 module load rhizobia-genomics
@@ -39,6 +42,7 @@ while (<$fh>) {
   $strains{$row[$strain_column]} = {}; # grab strain name from specific column
 }
 
+$reads_dir = File::Spec->rel2abs($reads_dir);
 opendir(DIR, $reads_dir) || die "cannot open $reads_dir. $!\n";
 
 # right now this is inflexible code that expects pre-trimmed data and the read
@@ -58,7 +62,7 @@ for my $file (readdir(DIR) ) {
 	  warn("unknown strain $strain, is the parser working properly?\n");
 	  next;
 	} else {
-	  $strains{$strain}->{$fc."_".$lane}->{$direction} = $file;
+	  $strains{$strain}->{$fc."_".$lane}->{$direction} = File::Spec->catfile($reads_dir,$file);
 	}
       } else {
 	warn("cannot match trim pattern\n");
