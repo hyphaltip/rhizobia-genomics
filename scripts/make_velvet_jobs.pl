@@ -20,7 +20,7 @@ my %strains;
 for my $file (readdir(INDIR) ) {
   if ( $file =~ /(\S+)\.fq(?:.gz)?\.keep\.abundfilt\.keep\.(se|pe)/) {
     my ($strain,$kind) = ($1,$2);
-    mkdir($strain) unless -d $strain;
+    mkdir("$dir/$strain") unless -d "$dir/$strain";
     warn "file is $file, strains is $strain, kind is $kind\n";
     $strains{$strain}->{$kind} = File::Spec->catfile($dir,$file);
   }
@@ -52,7 +52,7 @@ module load velvet
 cd $dir/$strain
 for asmdir in asm_??
 do
- velvetg \$asmdir -exp_cov auto -cov_cutoff auto -ins_length 350 -amos_file yes -min_contig_lgth 500
+ velvetg \$asmdir -exp_cov auto -cov_cutoff auto -ins_length 350 -min_contig_lgth 500
  done
 
 EOF
