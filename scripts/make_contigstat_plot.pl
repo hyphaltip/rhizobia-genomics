@@ -29,10 +29,11 @@ for my $kmer( sort { $a <=> $b} keys %dat ) {
 open(my $R => ">$name\_stats.R") || die $!;
 print $R <<EOF
 pdf("$name\_stats.pdf")
-tab <- read.table("assembly.stats",header=T,sep="\t")
+tab <- read.table("$name.stats",header=T,sep="\t")
 plot(tab\$KMER,tab\$N50,main="N50",xlab="kmer",ylab="N50")
 plot(tab\$KMER,tab\$CONTIGS,main="Number of Contigs",xlab="kmer",ylab="Contig count")
 plot(tab\$KMER,tab\$MAX,main="Max Contigsize",xlab="kmer",ylab="Max contig (bp)")
 plot(tab\$KMER,tab\$SUM,main="Total assembly size",xlab="kmer",ylab="Assembly size (bp)")
 EOF
 ;
+`R --no-save < $name\_stats.R`;
