@@ -26,7 +26,7 @@ for my $kmer( sort { $a <=> $b} keys %dat ) {
   print $outfh join("\t", $kmer, map { $dat{$kmer}->{$_} } 
 		    qw(N SUM MAX N50 MIN)),"\n";
 }
-open(my $R => ">assembly_stats.R") || die $!;
+open(my $R => ">$name\_stats.R") || die $!;
 print $R <<EOF
 pdf("$name\_stats.pdf")
 tab <- read.table("assembly.stats",header=T,sep="\t")
