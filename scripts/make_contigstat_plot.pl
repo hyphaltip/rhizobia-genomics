@@ -33,7 +33,7 @@ tab <- read.table("$name.stats",header=T,sep="\t")
 plot(tab\$KMER,tab\$N50,main="N50",xlab="kmer",ylab="N50")
 plot(tab\$KMER,tab\$CONTIGS,main="Number of Contigs",xlab="kmer",ylab="Contig count")
 plot(tab\$KMER,tab\$MAX,main="Max Contigsize",xlab="kmer",ylab="Max contig (bp)")
-plot(tab\$KMER,tab\$SUM,main="Total assembly size",xlab="kmer",ylab="Assembly size (bp)")
+plot(tab\$KMER,tab\$LENGTH,main="Total assembly size",xlab="kmer",ylab="Assembly size (bp)")
 EOF
 ;
 `R --no-save < $name\_stats.R`;
