@@ -2,7 +2,7 @@
 use strict;
 
 my $dir = shift || ".";
-
+my $name = shift || 'assembly';
 opendir(DIR, $dir) || die $!;
 # process output from running
 # faLen < assembly | stats > assembly.contigstats
@@ -20,7 +20,7 @@ for my $file ( readdir(DIR) ) {
   }
 }
 
-open(my $outfh => ">assembly.stats") || die $!;
+open(my $outfh => ">$name.stats") || die $!;
 print $outfh join("\t", qw(KMER CONTIGS LENGTH MAX N50 MIN)), "\n";
 for my $kmer( sort { $a <=> $b} keys %dat ) {
   print $outfh join("\t", $kmer, map { $dat{$kmer}->{$_} } 
@@ -28,7 +28,7 @@ for my $kmer( sort { $a <=> $b} keys %dat ) {
 }
 open(my $R => ">assembly_stats.R") || die $!;
 print $R <<EOF
-pdf("assembly_stats.pdf")
+pdf("$name\_stats.pdf")
 tab <- read.table("assembly.stats",header=T,sep="\t")
 plot(tab\$KMER,tab\$N50,main="N50",xlab="kmer",ylab="N50")
 plot(tab\$KMER,tab\$CONTIGS,main="Number of Contigs",xlab="kmer",ylab="Contig count")
