@@ -16,7 +16,8 @@ for my $f ( sort readdir(DIR) ) {
     while( my $hit = $result->next_hit ) {
       while( my $hsp = $hit->next_hsp ) {
 	if ( $hsp->percent_identity >= 50 ) {
-	  $table{$result->query_name}->{$strain} = $hsp->percent_identity;
+	  # store the %ID and convert this to only 2 FP decimals to make formatting easier
+	  $table{$result->query_name}->{$strain} = sprintf("%.2f", $hsp->percent_identity);
 	}
       }
     }
