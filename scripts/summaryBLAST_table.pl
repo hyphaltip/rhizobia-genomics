@@ -1,6 +1,11 @@
 #!/usr/bin/perl -w
 use strict;
+use warnings;
 use Bio::SearchIO;
+use Getopt::Long;
+my $debug = 0;
+
+GetOptions('v|verbose!' => \$debug);
 
 my $dir = shift || die "provide directory with BLASTP files";
 opendir(DIR,$dir) || die "cannot open dir $dir: $!\n";
@@ -10,7 +15,7 @@ for my $f ( sort readdir(DIR) ) {
   next unless $f =~ /-vs-(\S+)\.BLASTP/;
   my $strain = $1;
   push @strains, $strain;
-  warn("Strain is $strain\n");
+  warn("Strain is $strain\n") if $debug;
   my $in = Bio::SearchIO->new(-format => 'blasttable', -file =>"$dir/$f");
   while( my $result = $in->next_result ) {
     while( my $hit = $result->next_hit ) {
