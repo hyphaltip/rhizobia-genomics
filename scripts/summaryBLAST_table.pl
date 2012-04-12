@@ -11,7 +11,7 @@ for my $f ( sort readdir(DIR) ) {
   my $strain = $1;
   push @strains, $strain;
   warn("Strain is $strain\n");
-  my $in = Bio::SearchIO->new(-format => 'blast', -file =>"$dir/$f");
+  my $in = Bio::SearchIO->new(-format => 'blasttable', -file =>"$dir/$f");
   while( my $result = $in->next_result ) {
     while( my $hit = $result->next_hit ) {
       while( my $hsp = $hit->next_hsp ) {
